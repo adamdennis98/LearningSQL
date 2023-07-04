@@ -1,0 +1,4 @@
+https://www.hackerrank.com/challenges/the-pads/problem
+
+SELECT CONCAT( Name, '(' , SUBSTR(Occupation,1,1) , ')' ) AS a FROM OCCUPATIONS UNION
+SELECT CONCAT('There are a total of ', count(Occupation), ' ' , LOWER(Occupation) , 's.') FROM OCCUPATIONS GROUP BY Occupation ORDER BY a;
