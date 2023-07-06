@@ -1,0 +1,34 @@
+https://www.hackerrank.com/challenges/occupations/problem
+
+# First SELECT creates a table with the occupations, names and a counter for each occupation. 
+# The occupations are in alphabetical order, and then the names are alphabetical too within those groups.
+# The numbers are linked to each occupation, so multiple entries have the number 1, however, they are for different roles.
+
+# The second SELECT uses these numbers (NameOrder) to form a table with the minimum amount of rows needed to include all
+# people for each profession. It then populates the columns for each occupation, maintaining the alphabetical order.
+
+# The final SELECT extracts the columns for each occupation.
+
+SELECT
+    Doctor,
+    Professor,
+    Singer,
+    Actor
+FROM(
+    SELECT
+        NameOrder,
+        max(CASE Occupation WHEN 'Doctor' THEN Name END) AS Doctor,    # max or min would work, needs to a function so it can be grouped according to the partition number.
+        max(CASE Occupation WHEN 'Professor' THEN Name END) AS Professor,
+        max(CASE Occupation WHEN 'Singer' THEN Name END) AS Singer,
+        max(CASE Occupation WHEN 'Actor' THEN Name END) AS Actor
+    FROM(
+        SELECT
+            Occupation,
+            Name,
+            row_number() over(PARTITION BY Occupation ORDER BY Name ASC) AS NameOrder    # Assign a row number to each unique entry in the table when splitting the data by the Occupation variable. Order them based on the name, to get it alphabetical.
+        FROM Occupations
+        ) 
+    AS NameLists
+    GROUP BY NameOrder
+    ) 
+AS Names;
